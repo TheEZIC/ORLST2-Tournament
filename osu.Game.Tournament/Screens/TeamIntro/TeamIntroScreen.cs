@@ -48,9 +48,11 @@ namespace osu.Game.Tournament.Screens.TeamIntro
                 return;
             }
 
-            const float y_flag_offset = 292;
+            const float y_flag_offset = 198;
 
             const float y_offset = 460;
+
+            const float flag_scale = 3.05f;
 
             mainContainer.Children = new Drawable[]
             {
@@ -60,19 +62,21 @@ namespace osu.Game.Tournament.Screens.TeamIntro
                 },
                 new DrawableTeamFlag(match.NewValue.Team1.Value)
                 {
-                    Position = new Vector2(165, y_flag_offset),
+                    Position = new Vector2(86, y_flag_offset),
+                    Scale = new Vector2(flag_scale),
                 },
                 new DrawableTeamWithPlayers(match.NewValue.Team1.Value, TeamColour.Red)
                 {
-                    Position = new Vector2(165, y_offset),
+                    Position = new Vector2(86, y_offset),
                 },
                 new DrawableTeamFlag(match.NewValue.Team2.Value)
                 {
-                    Position = new Vector2(740, y_flag_offset),
+                    Position = new Vector2(665, y_flag_offset),
+                    Scale = new Vector2(flag_scale),
                 },
                 new DrawableTeamWithPlayers(match.NewValue.Team2.Value, TeamColour.Blue)
                 {
-                    Position = new Vector2(740, y_offset),
+                    Position = new Vector2(665, y_offset),
                 },
             };
         }

@@ -91,8 +91,8 @@ namespace osu.Game.Tournament.Screens.TeamIntro
         {
             mainContainer.Children = new Drawable[]
             {
-                new LeftInfo(team) { Position = new Vector2(55, 150), },
-                new RightInfo(team) { Position = new Vector2(500, 150), },
+                new LeftInfo(team) { Position = new Vector2(62, 50), },
+                new RightInfo(team) { Position = new Vector2(500, 50), },
             };
         }
 
@@ -288,7 +288,7 @@ namespace osu.Game.Tournament.Screens.TeamIntro
                     AutoSizeAxes = Axes.Both;
 
                     Flag.RelativeSizeAxes = Axes.None;
-                    Flag.Scale = new Vector2(1.2f);
+                    Flag.Scale = new Vector2(2.06f);
 
                     InternalChild = new FillFlowContainer
                     {
@@ -300,6 +300,7 @@ namespace osu.Game.Tournament.Screens.TeamIntro
                             Flag,
                             new OsuSpriteText
                             {
+                                Margin = new MarginPadding{ Top = 10 },
                                 Text = team?.FullName.Value ?? "???",
                                 Font = OsuFont.Torus.With(size: 32, weight: FontWeight.SemiBold),
                                 Colour = TournamentGame.TEXT_COLOUR,
