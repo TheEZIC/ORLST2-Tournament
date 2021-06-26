@@ -41,10 +41,6 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             countMeh = Score.Statistics.GetOrDefault(HitResult.Meh);
             countMiss = Score.Statistics.GetOrDefault(HitResult.Miss);
 
-            // Don't count scores made with supposedly unranked mods
-            if (mods.Any(m => !m.Ranked))
-                return 0;
-
             // Custom multipliers for NoFail and SpunOut.
             double multiplier = 1.12; // This is being adjusted to keep the final pp value scaled around what it used to be when changing things
 
@@ -104,7 +100,7 @@ namespace osu.Game.Rulesets.Osu.Difficulty
             if (Attributes.ApproachRate > 10.33)
                 approachRateFactor += 0.4 * (Attributes.ApproachRate - 10.33);
             else if (Attributes.ApproachRate < 8.0)
-                approachRateFactor += 0.1 * (8.0 - Attributes.ApproachRate);
+                approachRateFactor += 0.01 * (8.0 - Attributes.ApproachRate);
 
             aimValue *= 1.0 + Math.Min(approachRateFactor, approachRateFactor * (totalHits / 1000.0));
 

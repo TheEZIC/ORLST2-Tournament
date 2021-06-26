@@ -37,9 +37,10 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
             AddInternal(scaleContainer = new Container
             {
                 Scale = new Vector2(SPRITE_SCALE),
-                Anchor = Anchor.Centre,
+                Anchor = Anchor.TopCentre,
                 Origin = Anchor.Centre,
                 RelativeSizeAxes = Axes.Both,
+                Y = SPINNER_Y_CENTRE,
                 Children = new Drawable[]
                 {
                     glow = new Sprite
@@ -54,28 +55,40 @@ namespace osu.Game.Rulesets.Osu.Skinning.Legacy
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Texture = source.GetTexture("spinner-bottom")
+                        Texture = source.GetTexture("spinner-bottom"),
                     },
                     discTop = new Sprite
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Texture = source.GetTexture("spinner-top")
+                        Texture = source.GetTexture("spinner-top"),
                     },
                     fixedMiddle = new Sprite
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Texture = source.GetTexture("spinner-middle")
+                        Texture = source.GetTexture("spinner-middle"),
                     },
                     spinningMiddle = new Sprite
                     {
                         Anchor = Anchor.Centre,
                         Origin = Anchor.Centre,
-                        Texture = source.GetTexture("spinner-middle2")
-                    }
+                        Texture = source.GetTexture("spinner-middle2"),
+                    },
                 }
             });
+
+            if (!(source.FindProvider(s => s.GetTexture("spinner-top") != null) is DefaultLegacySkin))
+            {
+                AddInternal(ApproachCircle = new Sprite
+                {
+                    Anchor = Anchor.TopCentre,
+                    Origin = Anchor.Centre,
+                    Texture = source.GetTexture("spinner-approachcircle"),
+                    Scale = new Vector2(SPRITE_SCALE * 1.86f),
+                    Y = SPINNER_Y_CENTRE,
+                });
+            }
         }
 
         protected override void UpdateStateTransforms(DrawableHitObject drawableHitObject, ArmedState state)

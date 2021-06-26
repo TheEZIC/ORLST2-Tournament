@@ -5,14 +5,15 @@ using System.Linq;
 using osu.Framework.Bindables;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
+using osu.Game.Rulesets.Catch.Beatmaps;
 using osu.Game.Rulesets.Mods;
 
 namespace osu.Game.Rulesets.Catch.Mods
 {
-    public class CatchModDifficultyAdjust : ModDifficultyAdjust
+    public class CatchModDifficultyAdjust : ModDifficultyAdjust, IApplicableToBeatmapProcessor
     {
         [SettingSource("Circle Size", "Override a beatmap's set CS.", FIRST_SETTING_ORDER - 1)]
-        public BindableNumber<float> CircleSize { get; } = new BindableFloat
+        public BindableNumber<float> CircleSize { get; } = new BindableFloatWithLimitExtension
         {
             Precision = 0.1f,
             MinValue = 1,
@@ -22,7 +23,7 @@ namespace osu.Game.Rulesets.Catch.Mods
         };
 
         [SettingSource("Approach Rate", "Override a beatmap's set AR.", LAST_SETTING_ORDER + 1)]
-        public BindableNumber<float> ApproachRate { get; } = new BindableFloat
+        public BindableNumber<float> ApproachRate { get; } = new BindableFloatWithLimitExtension
         {
             Precision = 0.1f,
             MinValue = 1,
@@ -31,18 +32,31 @@ namespace osu.Game.Rulesets.Catch.Mods
             Value = 5,
         };
 
+        [SettingSource("Spicy Patterns", "Adjust the patterns as if Hard Rock is enabled.")]
+        public BindableBool HardRockOffsets { get; } = new BindableBool();
+
+        protected override void ApplyLimits(bool extended)
+        {
+            base.ApplyLimits(extended);
+
+            CircleSize.MaxValue = extended ? 11 : 10;
+            ApproachRate.MaxValue = extended ? 11 : 10;
+        }
+
         public override string SettingDescription
         {
             get
             {
                 string circleSize = CircleSize.IsDefault ? string.Empty : $"CS {CircleSize.Value:N1}";
                 string approachRate = ApproachRate.IsDefault ? string.Empty : $"AR {ApproachRate.Value:N1}";
+                string spicyPatterns = HardRockOffsets.IsDefault ? string.Empty : "Spicy patterns";
 
                 return string.Join(", ", new[]
                 {
                     circleSize,
                     base.SettingDescription,
-                    approachRate
+                    approachRate,
+                    spicyPatterns,
                 }.Where(s => !string.IsNullOrEmpty(s)));
             }
         }
@@ -59,8 +73,14 @@ namespace osu.Game.Rulesets.Catch.Mods
         {
             base.ApplySettings(difficulty);
 
-            difficulty.CircleSize = CircleSize.Value;
-            difficulty.ApproachRate = ApproachRate.Value;
+            ApplySetting(CircleSize, cs => difficulty.CircleSize = cs);
+            ApplySetting(ApproachRate, ar => difficulty.ApproachRate = ar);
+        }
+
+        public void ApplyToBeatmapProcessor(IBeatmapProcessor beatmapProcessor)
+        {
+            var catchProcessor = (CatchBeatmapProcessor)beatmapProcessor;
+            catchProcessor.HardRockOffsets = HardRockOffsets.Value;
         }
     }
 }
